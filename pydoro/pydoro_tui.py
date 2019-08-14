@@ -29,13 +29,10 @@ btn_exit = Button("Exit", handler=exit_clicked)
 
 text_area = FormattedTextControl(focusable=False, show_cursor=False)
 text_window = Window(
-    content=text_area, dont_extend_height=True, height=11, style="bg:#ffffff #000000"
+    content=text_area, dont_extend_height=True, height=11, style="bg:#000000 #ffffff"
 )
 
 root_container = Box(
-    HSplit(
-        [
-            Label(text="Press `Tab` to move the focus."),
             HSplit(
                 [
                     VSplit(
@@ -46,8 +43,6 @@ root_container = Box(
                     text_window,
                 ]
             ),
-        ]
-    )
 )
 
 layout = Layout(container=root_container, focused_element=btn_start)
