@@ -2,7 +2,6 @@ import itertools
 from enum import IntEnum
 from timeit import default_timer
 
-from pydoro.pydoro_core import sound
 from pydoro.pydoro_core.util import in_app_path
 
 TOMATOES_PER_SET = 4
@@ -155,12 +154,8 @@ def cur_time():
 
 
 def play_alarm():
-    # noinspection PyBroadException
-    try:
-        sound.play(in_app_path("b15.wav"), block=False)
-    except Exception:
-        pass
-
+    import subprocess
+    subprocess.run(["/mnt/c/Program Files/VideoLAN/VLC/vlc.exe","-I dummy", "--dummy-quiet","c:\\b15.wav","vlc://quit"])
 
 class InitialState:
     name = "initial"
@@ -236,19 +231,12 @@ class IntermediateState(InitialState):
         self._status = TaskStatus.LIMBO
         self._next_factory = None
         self._last_alarm_time = 0
-        self._sound()
-
-    def _sound(self):
-        if cur_time() - self._last_alarm_time > ALARM_TIME:
-            play_alarm()
-            self._last_alarm_time = cur_time()
 
     def start(self):
         return self._next_factory(tomato=self._tomato)
 
     @property
     def time_remaining(self):
-        self._sound()
         return "Press [start] to continue with " + self._next_factory.name
 
     @property
@@ -446,7 +434,8 @@ class Tomato:
 
     def update(self):
         if self._state.done:
-            self._state = self._state.next_state
+           play_alarm()
+           self._state = self._state.next_state
 
     def as_formatted_text(self):
         task = TEXT[self._state.task]
